@@ -1,10 +1,11 @@
 package com.emedclub.news.api;
 
+import com.emedclub.news.entity.ResponseBody;
 import com.emedclub.news.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,5 +38,18 @@ public class News {
     @RequestMapping("/id/{id}")
     public com.emedclub.news.entity.News newsId(@PathVariable("id") String id) {
         return newsService.findById(id);
+    }
+
+    @RequestMapping(value = "/translate", method = RequestMethod.POST, produces = "application/json")
+    public ResponseBody translate(@RequestBody com.emedclub.news.entity.News news) {
+        com.emedclub.news.entity.News originalNews = newsService.findById(news.getId());
+        originalNews.setChContent(news.getChContent());
+        originalNews.setTranslated(true);
+        boolean success = newsService.saveNews(originalNews);
+        if (success) {
+            return new ResponseBody(true, HttpStatus.OK);
+        } else {
+            return new ResponseBody(false, HttpStatus.NOT_ACCEPTABLE);
+        }
     }
 }

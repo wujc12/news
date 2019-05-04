@@ -16,4 +16,6 @@ public interface NewsService {
     public News findById(String id);
 
     public List<News> findAllOrderByDate();
+
+    boolean saveNews(News news);
 }

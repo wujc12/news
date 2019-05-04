@@ -44,4 +44,15 @@ public class NewsServiceImpl implements NewsService {
     public List<News> findAllOrderByDate() {
         return newsDao.findAll(Sort.by("date").descending());
     }
+
+    @Override
+    public boolean saveNews(News news) {
+        try {
+            newsDao.save(news);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 }
